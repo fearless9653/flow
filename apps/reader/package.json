@@ -2,7 +2,7 @@
   "name": "@flow/reader",
   "private": true,
   "scripts": {
-    "dev": "cross-env RECOIL_DUPLICATE_ATOM_KEY_CHECKING_ENABLED=false next dev -p 7127",
+    "dev": "cross-env RECOIL_DUPLICATE_ATOM_KEY_CHECKING_ENABLED=false next dev -p 3001",
     "build": "next build",
     "analyze": "cross-env ANALYZE=true next build",
     "start": "next start",
@@ -24,7 +24,6 @@
     "dayjs": "1.11.2",
     "dexie": "3.2.2",
     "dexie-react-hooks": "1.1.1",
-    "dropbox": "10.32.0",
     "file-saver": "2.0.5",
     "jszip": "3.10.1",
     "next": "12.3.4",

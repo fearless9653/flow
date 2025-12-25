@@ -25,7 +25,7 @@ import {
   useColorScheme,
   useDisablePinchZooming,
   useMobile,
-  useSync,
+  // Removed useSync import
   useTranslation,
   useTypography,
 } from '../hooks'
@@ -235,7 +235,7 @@ function BookPane({ tab, onMouseDown }: BookPaneProps) {
     }
   }, [])
 
-  useSync(tab)
+  // Removed useSync hook call
 
   const setNavbar = useSetRecoilState(navbarState)
   const mobile = useMobile()
