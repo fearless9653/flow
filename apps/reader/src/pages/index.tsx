@@ -9,7 +9,6 @@ import {
   MdCheckBoxOutlineBlank,
   MdCheckCircle,
   MdOutlineFileDownload,
-  MdOutlineShare,
 } from 'react-icons/md'
 import { useSet } from 'react-use'
 
@@ -25,7 +24,6 @@ import {
 import { reader, useReaderSnapshot } from '../models'
 import { lock } from '../styles'
 import { pack } from '../sync'
-import { copy } from '../utils'
 
 const placeholder = `data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1 1"><rect fill="gray" fill-opacity="0" width="1" height="1"/></svg>`
 
@@ -130,15 +128,6 @@ const Library: React.FC = () => {
             type="url"
             hideLabel
             actions={[
-              {
-                title: t('share'),
-                Icon: MdOutlineShare,
-                onClick(el) {
-                  if (el?.reportValidity()) {
-                    copy(`${window.location.origin}/?${SOURCE}=${el.value}`)
-                  }
-                },
-              },
               {
                 title: t('download'),
                 Icon: MdOutlineFileDownload,
