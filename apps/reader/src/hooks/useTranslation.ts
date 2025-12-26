@@ -4,7 +4,7 @@ import { useCallback } from 'react'
 import locales from '../../locales'
 
 export function useTranslation(scope?: string) {
-  const { locale = 'en-US' } = useRouter()
+  const { locale = 'zh-CN' } = useRouter()
 
   return useCallback(
     (key: string) => {

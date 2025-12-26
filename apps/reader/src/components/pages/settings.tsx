@@ -1,5 +1,4 @@
 import Dexie from 'dexie'
-import { useRouter } from 'next/router'
 
 import { ColorScheme, useColorScheme, useTranslation } from '@flow/reader/hooks'
 import { useSettings } from '@flow/reader/state'
@@ -10,14 +9,14 @@ import { Page } from '../Page'
 
 export const Settings: React.FC = () => {
   const { scheme, setScheme } = useColorScheme()
-  const { asPath, push, locale } = useRouter()
   const [settings, setSettings] = useSettings()
   const t = useTranslation('settings')
 
   return (
     <Page headline={t('title')}>
       <div className="space-y-6">
-        <Item title={t('language')}>
+        {/* Language selector is hidden as per requirement */}
+        {/* <Item title={t('language')}>
           <Select
             value={locale}
             onChange={(e) => {
@@ -28,7 +27,7 @@ export const Settings: React.FC = () => {
             <option value="zh-CN">简体中文</option>
             <option value="ja-JP">日本語</option>
           </Select>
-        </Item>
+        </Item> */}
         <Item title={t('color_scheme')}>
           <Select
             value={scheme}

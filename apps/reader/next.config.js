@@ -53,7 +53,7 @@ const config = {
   ...(!IS_CLOUDFLARE && {
     i18n: {
       locales: ['en-US', 'zh-CN', 'ja-JP'],
-      defaultLocale: 'en-US',
+      defaultLocale: 'zh-CN',
     },
   }),
   // Note: Next.js 12.x doesn't support output: 'export'
