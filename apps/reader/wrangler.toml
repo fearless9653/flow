@@ -5,8 +5,8 @@ name = "flow-reader"
 compatibility_date = "2024-01-01"
 
 [build]
-command = "pnpm install --frozen-lockfile && pnpm --filter @flow/reader build:cloudflare"
-cwd = "../../"
+command = "cd ../.. && pnpm install --frozen-lockfile && cd apps/reader && pnpm run build:cloudflare"
+cwd = "apps/reader"
 
 [build.upload]
 format = "directory"

@@ -3,10 +3,6 @@ const path = require('path')
 const withBundleAnalyzer = require('@next/bundle-analyzer')({
   enabled: process.env.ANALYZE === 'true',
 })
-const { withSentryConfig } = require('@sentry/nextjs')
-const withPWA = require('next-pwa')({
-  dest: 'public',
-})
 const withTM = require('next-transpile-modules')([
   '@flow/internal',
   '@flow/epubjs',
@@ -16,6 +12,15 @@ const withTM = require('next-transpile-modules')([
 const IS_DEV = process.env.NODE_ENV === 'development'
 const IS_DOCKER = process.env.DOCKER
 const IS_CLOUDFLARE = process.env.CLOUDFLARE_PAGES === 'true'
+
+// Only load these in non-Cloudflare environments
+let withSentryConfig, withPWA
+if (!IS_CLOUDFLARE) {
+  withSentryConfig = require('@sentry/nextjs').withSentryConfig
+  withPWA = require('next-pwa')({
+    dest: 'public',
+  })
+}
 
 /**
  * @type {import('@sentry/nextjs').SentryWebpackPluginOptions}
@@ -44,19 +49,22 @@ const config = {
   webpack(config) {
     return config
   },
-  // For Cloudflare Pages: Use static export (i18n not supported with static export)
+  // For Cloudflare Pages: Disable i18n for static export compatibility
   ...(!IS_CLOUDFLARE && {
     i18n: {
       locales: ['en-US', 'zh-CN', 'ja-JP'],
       defaultLocale: 'en-US',
     },
   }),
-  // Cloudflare Pages static export configuration
+  // Note: Next.js 12.x doesn't support output: 'export'
+  // Static export is handled via 'next export' command in package.json
+  // Cloudflare Pages configuration
   ...(IS_CLOUDFLARE && {
-    output: 'export',
+    // Disable image optimization for static export
     images: {
       unoptimized: true,
     },
+    // Add trailing slash for better routing
     trailingSlash: true,
   }),
   // Docker standalone configuration
@@ -69,7 +77,7 @@ const config = {
     }),
 }
 
-// For Cloudflare Pages: Skip PWA and Sentry wrappers
+// For Cloudflare Pages: Simple export without PWA and Sentry
 if (IS_CLOUDFLARE) {
   module.exports = withTM(withBundleAnalyzer(config))
 } else {
