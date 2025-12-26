@@ -156,7 +156,7 @@ function ViewActionBar({ className, env }: EnvActionBarProps) {
           const active = action === name
           return (
             <Action
-              title={t(`${title}.title`)}
+              title={t(`${title}.title`) || `${title}.title`}
               Icon={Icon}
               active={active}
               onClick={() => setAction(active ? undefined : name)}
@@ -203,7 +203,7 @@ function PageActionBar({ env }: EnvActionBarProps) {
         .filter((a) => a.env & env)
         .map(({ name, title, Icon, Component, disabled }, i) => (
           <Action
-            title={t(`${title}.title`)}
+            title={t(`${title}.title`) || `${title}.title`}
             Icon={Icon}
             active={mobile ? action === name : undefined}
             disabled={disabled}
@@ -309,8 +309,8 @@ const SideBar: React.FC = () => {
         {viewActions.map(({ name, title, View }) => (
           <View
             key={name}
-            name={t(`${name}.title`)}
-            title={t(`${title}.title`)}
+            name={t(`${name}.title`) || `${name}.title`}
+            title={t(`${title}.title`) || `${title}.title`}
             className={clsx(name !== action && '!hidden')}
           />
         ))}

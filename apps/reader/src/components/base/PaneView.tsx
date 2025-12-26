@@ -39,7 +39,7 @@ export const Pane = forwardRef<HTMLDivElement, PaneProps>(function Pane(
           className="typescale-label-small text-on-surface-variant !font-bold"
           style={{ fontSize: scale(11, 12) }}
         >
-          {headline.toUpperCase()}
+          {(headline || '').toUpperCase()}
         </div>
         {actions && (
           <ActionBar
@@ -88,7 +88,7 @@ export function PaneView({
           className="text-on-surface"
           style={{ fontSize: scale(11, 12) }}
         >
-          {name?.toUpperCase()}
+          {(name || '').toUpperCase()}
         </h2>
         {actions && <ActionBar actions={actions} className="-mr-1" />}
       </div>

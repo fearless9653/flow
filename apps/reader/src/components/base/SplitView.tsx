@@ -69,7 +69,8 @@ export function useSplitViewItem(
 ) {
   const [size, _resize] = useSize(preferredSize, minSize, maxSize)
   const resize = minSize === maxSize ? undefined : _resize
-  const stringKey = typeof key === 'string' ? key : key.name
+  const stringKey =
+    typeof key === 'string' ? key || 'default-key' : key.name || 'default-key'
   const view = useMemo(
     () => ({
       key: stringKey,
