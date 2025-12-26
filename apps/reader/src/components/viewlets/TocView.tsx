@@ -58,8 +58,11 @@ const TocPane: React.FC = () => {
   const t = useTranslation()
   const { focusedBookTab } = useReaderSnapshot()
   const toc = focusedBookTab?.nav?.toc as INavItem[] | undefined
-  const rows = useMemo(() => toc?.flatMap((i) => flatTree(i)), [toc])
-  const expanded = toc?.some((r) => r.expanded)
+  const rows = useMemo(
+    () => (toc ? toc.flatMap((i) => flatTree(i)) : []),
+    [toc],
+  )
+  const expanded = toc?.some((r) => r.expanded) ?? false
   const currentNavItem = focusedBookTab?.currentNavItem
 
   const { outerRef, innerRef, items, scrollToItem } = useList(rows)
@@ -74,9 +77,12 @@ const TocPane: React.FC = () => {
           title: t(expanded ? 'action.collapse_all' : 'action.expand_all'),
           Icon: expanded ? VscCollapseAll : VscExpandAll,
           handle() {
-            reader.focusedBookTab?.nav?.toc?.forEach((r) =>
-              dfs(r as INavItem, (i) => (i.expanded = !expanded)),
-            )
+            const toc = reader.focusedBookTab?.nav?.toc
+            if (toc) {
+              toc.forEach((r) =>
+                dfs(r as INavItem, (i) => (i.expanded = !expanded)),
+              )
+            }
           },
         },
       ]}
