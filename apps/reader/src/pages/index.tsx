@@ -186,15 +186,7 @@ const Library: React.FC = () => {
           <div className="space-x-2">
             {select ? (
               <>
-                {/* Removed upload functionality */}
-                <Button
-                  onClick={async () => {
-                    toggleSelect()
-                    // Removed Dropbox upload functionality
-                  }}
-                >
-                  {t('upload')}
-                </Button>
+                {/* Upload button removed as per requirement */}
                 <Button
                   onClick={async () => {
                     toggleSelect()
