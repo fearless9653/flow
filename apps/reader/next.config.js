@@ -15,6 +15,7 @@ const withTM = require('next-transpile-modules')([
 
 const IS_DEV = process.env.NODE_ENV === 'development'
 const IS_DOCKER = process.env.DOCKER
+const IS_CLOUDFLARE = process.env.CLOUDFLARE_PAGES === 'true'
 
 /**
  * @type {import('@sentry/nextjs').SentryWebpackPluginOptions}
@@ -43,27 +44,45 @@ const config = {
   webpack(config) {
     return config
   },
-  i18n: {
-    locales: ['en-US', 'zh-CN', 'ja-JP'],
-    defaultLocale: 'en-US',
-  },
-  ...(IS_DOCKER && {
-    output: 'standalone',
-    experimental: {
-      outputFileTracingRoot: path.join(__dirname, '../../'),
+  // For Cloudflare Pages: Use static export (i18n not supported with static export)
+  ...(!IS_CLOUDFLARE && {
+    i18n: {
+      locales: ['en-US', 'zh-CN', 'ja-JP'],
+      defaultLocale: 'en-US',
     },
   }),
+  // Cloudflare Pages static export configuration
+  ...(IS_CLOUDFLARE && {
+    output: 'export',
+    images: {
+      unoptimized: true,
+    },
+    trailingSlash: true,
+  }),
+  // Docker standalone configuration
+  ...(IS_DOCKER &&
+    !IS_CLOUDFLARE && {
+      output: 'standalone',
+      experimental: {
+        outputFileTracingRoot: path.join(__dirname, '../../'),
+      },
+    }),
 }
 
-const base = withPWA(withTM(withBundleAnalyzer(config)))
+// For Cloudflare Pages: Skip PWA and Sentry wrappers
+if (IS_CLOUDFLARE) {
+  module.exports = withTM(withBundleAnalyzer(config))
+} else {
+  const base = withPWA(withTM(withBundleAnalyzer(config)))
 
-const dev = base
-const docker = base
-const prod = withSentryConfig(
-  base,
-  // Make sure adding Sentry options is the last code to run before exporting, to
-  // ensure that your source maps include changes from all other Webpack plugins
-  sentryWebpackPluginOptions,
-)
+  const dev = base
+  const docker = base
+  const prod = withSentryConfig(
+    base,
+    // Make sure adding Sentry options is the last code to run before exporting, to
+    // ensure that your source maps include changes from all other Webpack plugins
+    sentryWebpackPluginOptions,
+  )
 
-module.exports = IS_DEV ? dev : IS_DOCKER ? docker : prod
+  module.exports = IS_DEV ? dev : IS_DOCKER ? docker : prod
+}
