@@ -42,10 +42,6 @@ const sentryWebpackPluginOptions = {
  **/
 const config = {
   pageExtensions: ['ts', 'tsx'],
-  env: {
-    // Explicitly disable Dropbox functionality after removal
-    NEXT_PUBLIC_ENABLE_DROPBOX: 'false',
-  },
   webpack(config) {
     return config
   },

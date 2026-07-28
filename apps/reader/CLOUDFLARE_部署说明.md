@@ -33,6 +33,7 @@
 
 - ✅ 添加 `build:cloudflare` 构建脚本
 - ✅ 使用两步命令：`next build && next export`（Next.js 12.x 兼容方式）
+- ✅ 两步命令均通过 `cross-env` 设置 `CLOUDFLARE_PAGES=true`（`&&` 分隔的命令不会继承前一段 cross-env 设置的变量，`next export` 必须单独设置，否则会因 i18n 配置报错）
 
 ### 2. 新增的文件
 
@@ -75,7 +76,7 @@ info  - Finalizing page optimization
 Page                                       Size     First Load JS
 ┌ ○ /                                      xxx kB         xxx kB
 ├ ○ /_                                     xxx kB         xxx kB
-└ ○ /success                               xxx kB         xxx kB
+└ ○ /404                                   xxx kB         xxx kB
 
 # 第二步：next export
 info  - using build directory: D:\...\flow\apps\reader\.next
@@ -93,8 +94,9 @@ Export successful. Files written to D:\...\flow\apps\reader\out
 ```
 apps/reader/out/
 ├── index.html          ✅ 必须存在
-├── _.html              ✅ 动态路由页
-├── success.html        ✅ 成功页
+├── 404.html            ✅ 404 页
+├── _/
+│   └── index.html      ✅ 因 trailingSlash: true，页面以目录形式导出
 ├── _next/
 │   ├── static/         ✅ 静态资源
 │   └── ...
@@ -227,17 +229,15 @@ wrangler pages deploy out --project-name=flow-reader
 - 标注和高亮
 - 排版自定义
 - 主题切换
-- 多语言界面
 - 文件导入/导出
 - 拖放功能
 
 ### ⚠️ 有限制的功能
 
-1. **i18n 路由**
+1. **i18n / 多语言**
 
-   - 自动语言路由被禁用
-   - 用户需要从界面手动选择语言
-   - 可选：实现客户端语言检测
+   - 静态导出不支持 Next.js i18n 路由，已禁用
+   - 界面语言锁定为简体中文（`useTranslation` 默认 `zh-CN`），设置页中的语言选择器已移除
 
 2. **PWA 服务工作线程**
 
@@ -293,9 +293,9 @@ wrangler pages deploy out --project-name=flow-reader
 
 ## 监控和分析
 
-### 错误跟踪（可选）
+### 错误跟踪
 
-设置 `NEXT_PUBLIC_SENTRY_DSN` 环境变量启用 Sentry 客户端错误跟踪。
+Cloudflare 构建跳过了 `withSentryConfig`，`sentry.client.config.js` 不会被注入，因此 Sentry 错误跟踪在 Cloudflare Pages 部署中**不可用**（设置 `NEXT_PUBLIC_SENTRY_DSN` 无效）。如需错误跟踪，需在 `_app.tsx` 中手动调用 `Sentry.init`。
 
 ### 分析（可选）
 
@@ -333,7 +333,6 @@ Cloudflare Pages 保留所有历史部署：
 - [ ] 测试 EPUB 文件上传和阅读
 - [ ] 测试标注和高亮功能
 - [ ] 测试主题切换
-- [ ] 测试多语言切换
 - [ ] 在移动设备上测试
 - [ ] 配置自定义域名（可选）
 - [ ] 设置监控和分析（可选）
@@ -346,4 +345,4 @@ Cloudflare Pages 保留所有历史部署：
 
 ## 总结
 
-Flow EPUB Reader 应用已经完全适配 Cloudflare Pages 部署。所有核心功能都能正常工作，且部署后将获得显著的性能提升。唯一的限制是自动 i18n 路由需要改为手动语言选择，但这不影响应用的核心功能。
+Flow EPUB Reader 应用已经完全适配 Cloudflare Pages 部署。所有核心功能都能正常工作，且部署后将获得显著的性能提升。主要限制：i18n 路由被禁用、界面语言锁定为简体中文，PWA 离线能力和 Sentry 错误跟踪在此部署方式下不可用，但这些不影响应用的核心阅读功能。

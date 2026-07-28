@@ -2,7 +2,12 @@ import { saveAs } from 'file-saver'
 import JSZip from 'jszip'
 
 import { BookRecord, db } from './db'
-// Removed unused import: readBlob
+
+interface SerializedBooks {
+  version: number
+  dbVersion: number
+  books: BookRecord[]
+}
 
 const VERSION = 1
 export const DATA_FILENAME = 'data.json'
@@ -16,7 +21,7 @@ function serializeData(books?: BookRecord[]) {
 }
 
 function deserializeData(text: string) {
-  const { version, dbVersion, books } = JSON.parse(text)
+  const { version, dbVersion, books } = JSON.parse(text) as SerializedBooks
 
   if (version < VERSION) {
     // migrate `data.json`
@@ -63,8 +68,8 @@ export async function unpack(file: File) {
   db?.covers.bulkPut(JSON.parse(coversText))
 
   const folder = zip.folder('files')
-  folder?.forEach(async (_, f: any) => {
-    const book = books.find((b: BookRecord) => `files/${b.name}` === f.name)
+  folder?.forEach(async (_, f) => {
+    const book = books.find((b) => `files/${b.name}` === f.name)
     if (!book) return
 
     const data = await f.async('blob')

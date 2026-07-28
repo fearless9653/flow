@@ -15,19 +15,8 @@ export const Settings: React.FC = () => {
   return (
     <Page headline={t('title')}>
       <div className="space-y-6">
-        {/* Language selector is hidden as per requirement */}
-        {/* <Item title={t('language')}>
-          <Select
-            value={locale}
-            onChange={(e) => {
-              push(asPath, undefined, { locale: e.target.value })
-            }}
-          >
-            <option value="en-US">English</option>
-            <option value="zh-CN">简体中文</option>
-            <option value="ja-JP">日本語</option>
-          </Select>
-        </Item> */}
+        {/* Language selector removed: locale is fixed to zh-CN (i18n routing is
+            disabled for static export) */}
         <Item title={t('color_scheme')}>
           <Select
             value={scheme}
@@ -52,7 +41,6 @@ export const Settings: React.FC = () => {
             }}
           />
         </Item>
-        {/* Removed Synchronization section */}
         <Item title={t('cache')}>
           <Button
             variant="secondary"
@@ -70,8 +58,6 @@ export const Settings: React.FC = () => {
     </Page>
   )
 }
-
-// Removed Synchronization component
 
 interface PartProps {
   title: string

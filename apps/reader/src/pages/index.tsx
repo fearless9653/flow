@@ -233,7 +233,6 @@ const Library: React.FC = () => {
               covers={covers}
               select={select}
               selected={has(book.id)}
-              // Removed loading prop since setLoading is no longer used
               toggle={toggle}
             />
           ))}
@@ -248,7 +247,6 @@ interface BookProps {
   covers?: CoverRecord[]
   select?: boolean
   selected?: boolean
-  // Removed loading?: boolean
   toggle: (id: string) => void
 }
 const Book: React.FC<BookProps> = ({
@@ -256,7 +254,6 @@ const Book: React.FC<BookProps> = ({
   covers,
   select,
   selected,
-  // Removed loading,
   toggle,
 }) => {
   const router = useRouter()
@@ -280,12 +277,6 @@ const Book: React.FC<BookProps> = ({
           }
         }}
       >
-        <div
-          className={clsx(
-            'absolute bottom-0 h-1 bg-blue-500',
-            // Removed loading && 'progress-bit w-[5%]',
-          )}
-        />
         {book.percentage !== undefined && (
           <div className="typescale-body-large absolute right-0 bg-gray-500/60 px-2 text-gray-100">
             {(book.percentage * 100).toFixed()}%

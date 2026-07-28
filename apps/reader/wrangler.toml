@@ -1,21 +1,6 @@
 # Wrangler configuration for Cloudflare Pages
-# This file is optional, but recommended for advanced configuration
+# Used by `wrangler pages deploy` (run from apps/reader after `pnpm build:cloudflare`)
 
 name = "flow-reader"
 compatibility_date = "2024-01-01"
-
-[build]
-command = "cd ../.. && pnpm install --frozen-lockfile && cd apps/reader && pnpm run build:cloudflare"
-cwd = "apps/reader"
-
-[build.upload]
-format = "directory"
-dir = "./out"
-
-[[build.upload.rules]]
-type = "Text"
-globs = ["**/*.html", "**/*.json", "**/*.txt"]
-
-[[build.upload.rules]]
-type = "CompiledWasm"
-globs = ["**/*.wasm"]
+pages_build_output_dir = "out"

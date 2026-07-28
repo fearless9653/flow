@@ -4,7 +4,7 @@
   "scripts": {
     "dev": "cross-env RECOIL_DUPLICATE_ATOM_KEY_CHECKING_ENABLED=false next dev -p 3001",
     "build": "next build",
-    "build:cloudflare": "cross-env CLOUDFLARE_PAGES=true next build && next export",
+    "build:cloudflare": "cross-env CLOUDFLARE_PAGES=true next build && cross-env CLOUDFLARE_PAGES=true next export",
     "analyze": "cross-env ANALYZE=true next build",
     "start": "next start",
     "lint": "next lint"
